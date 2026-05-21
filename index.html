@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>521快乐</title>
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        overflow:hidden;
+        touch-action:none;
+    }
+
+    body{
+        width:100vw;
+        height:100vh;
+        background:linear-gradient(to bottom,#ffb6c1,#fff0f5);
+        position:relative;
+        font-family:"Microsoft YaHei",sans-serif;
+    }
+
+    /* 花瓣 */
+    .petal{
+        position:absolute;
+        top:-50px;
+        color:#ff69b4;
+        font-size:22px;
+        animation:fall linear infinite;
+        opacity:0.8;
+    }
+
+    @keyframes fall{
+        0%{
+            transform:translateY(-50px) rotate(0deg);
+        }
+        100%{
+            transform:translateY(110vh) rotate(360deg);
+        }
+    }
+
+    /* 中间炸弹 */
+    #bomb{
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:130px;
+        height:130px;
+        background:#ff1493;
+        clip-path:path("M65 15 C85 -5 130 20 130 60 C130 100 65 125 65 125 C65 125 0 100 0 60 C0 20 45 -5 65 15 Z");
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        color:white;
+        font-size:22px;
+        font-weight:bold;
+        cursor:pointer;
+        box-shadow:0 0 30px #ff1493;
+        animation:pulse 1s infinite;
+        z-index:10;
+    }
+
+    @keyframes pulse{
+        0%,100%{
+            transform:translate(-50%,-50%) scale(1);
+        }
+        50%{
+            transform:translate(-50%,-50%) scale(1.1);
+        }
+    }
+
+    /* 爱心爆炸 */
+    .heart{
+        position:absolute;
+        color:#ff1493;
+        font-size:26px;
+        pointer-events:none;
+        animation:explode 2s forwards;
+    }
+
+    @keyframes explode{
+        0%{
+            opacity:1;
+            transform:translate(0,0) scale(1);
+        }
+        100%{
+            opacity:0;
+            transform:translate(var(--x),var(--y)) scale(2);
+        }
+    }
+
+    /* 最终文字 */
+    #text{
+        position:absolute;
+        width:100%;
+        top:70%;
+        text-align:center;
+        font-size:42px;
+        font-weight:bold;
+        color:#ff1493;
+        opacity:0;
+        transition:1.5s;
+        text-shadow:0 0 20px white;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div id="bomb">点我</div>
+<div id="text">姐姐 521快乐！❤️</div>
+
+<script>
+
+    /* 花瓣飘落 */
+    function createPetal(){
+        const petal=document.createElement("div");
+        petal.className="petal";
+        petal.innerHTML=Math.random()>0.5 ? "🌸" : "💮";
+
+        petal.style.left=Math.random()*window.innerWidth+"px";
+        petal.style.animationDuration=(5+Math.random()*5)+"s";
+        petal.style.fontSize=(16+Math.random()*20)+"px";
+
+        document.body.appendChild(petal);
+
+        setTimeout(()=>{
+            petal.remove();
+        },10000);
+    }
+
+    setInterval(createPetal,180);
+
+    /* 点击爱心炸弹 */
+    const bomb=document.getElementById("bomb");
+
+    bomb.addEventListener("click",()=>{
+
+        bomb.style.display="none";
+
+        const centerX=window.innerWidth/2;
+        const centerY=window.innerHeight/2;
+
+        for(let i=0;i<80;i++){
+
+            const heart=document.createElement("div");
+            heart.className="heart";
+            heart.innerHTML="❤️";
+
+            heart.style.left=centerX+"px";
+            heart.style.top=centerY+"px";
+
+            const angle=(Math.PI*2/80)*i;
+            const radius=200+Math.random()*120;
+
+            const x=Math.cos(angle)*radius+"px";
+            const y=Math.sin(angle)*radius+"px";
+
+            heart.style.setProperty("--x",x);
+            heart.style.setProperty("--y",y);
+
+            document.body.appendChild(heart);
+
+            setTimeout(()=>{
+                heart.remove();
+            },2000);
+        }
+
+        /* 显示文字 */
+        setTimeout(()=>{
+            const text=document.getElementById("text");
+            text.style.opacity="1";
+        },1200);
+
+    });
+
+</script>
+
+</body>
+</html>
